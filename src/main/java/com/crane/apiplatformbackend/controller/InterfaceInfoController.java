@@ -6,10 +6,7 @@ import com.crane.apiplatformbackend.model.domain.InterfaceInfoVo;
 import com.crane.apiplatformbackend.model.request.InterfaceAddRequest;
 import com.crane.apiplatformbackend.service.InterfaceInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +16,9 @@ import java.util.List;
  * @Date 2024/10/5 15:04
  * @Author Crane Resigned
  */
-@RestController("/interface")
+@RestController
+@RequestMapping("/interface")
+@CrossOrigin(origins = "http://localhost:8000", allowCredentials = "true")
 public class InterfaceInfoController {
 
     @Autowired
