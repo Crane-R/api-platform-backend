@@ -13,6 +13,7 @@ import com.crane.apiplatformbackend.model.domain.UserVo;
 import com.crane.apiplatformbackend.model.request.UserAddRequest;
 import com.crane.apiplatformbackend.service.UserService;
 import com.crane.apiplatformbackend.mapper.UserMapper;
+import com.crane.apiplatformbackend.util.AkSkSignGenerate;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setUPassword(SecureUtil.md5(password));
         user.setNickname(userAddRequest.getNickname());
         user.setUserRole(userAddRequest.getUserRole());
+        String generateAk;
+        //检测ak是否重复
+        long existUser;
+        do {
+            generateAk = AkSkSignGenerate.generateAk();
+            QueryWrapper<User> judgeAkRepeatWrapper = new QueryWrapper<>();
+            judgeAkRepeatWrapper.eq("access_key", generateAk);
+            existUser = userMapper.selectCount(judgeAkRepeatWrapper);
+        } while (existUser > 0);
+        user.setAccessKey(generateAk);
+        user.setSecretKey(AkSkSignGenerate.generateSk());
         return userMapper.insert(user) == 1;
     }
 

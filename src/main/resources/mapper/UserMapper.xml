@@ -15,12 +15,15 @@
             <result property="userRole" column="user_role" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+            <result property="accessKey" column="access_key" jdbcType="VARCHAR"/>
+            <result property="secretKey" column="secret_key" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        u_id,username,nickname,
+        u_id
+        ,username,nickname,
         avatar_url,gender,u_password,
         user_status,user_role,create_time,
-        is_delete
+        is_delete,access_key,secret_key
     </sql>
 </mapper>
