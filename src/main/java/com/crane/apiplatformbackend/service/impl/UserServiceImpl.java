@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.crane.apiplatformbackend.common.ErrorStatus;
+import com.crane.apiplatformbackend.constants.ErrorStatus;
 import com.crane.apiplatformbackend.constants.UserConstants;
 import com.crane.apiplatformbackend.exception.BusinessException;
 import com.crane.apiplatformbackend.model.domain.User;

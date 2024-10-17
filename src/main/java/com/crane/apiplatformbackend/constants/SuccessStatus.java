@@ -1,8 +1,12 @@
-package com.crane.apiplatformbackend.common;
+package com.crane.apiplatformbackend.constants;
   
-import lombok.Getter;  
-  
-@Getter  
+import lombok.Getter;
+
+/**
+ * @author Crane Resigned
+ */
+
+@Getter
 public enum SuccessStatus {  
   
     SUCCESS(20000, "成功");  

@@ -1,4 +1,4 @@
-package com.crane.apiplatformbackend.common;
+package com.crane.apiplatformbackend.constants;
   
 import lombok.Getter;  
   

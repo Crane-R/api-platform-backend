@@ -1,6 +1,6 @@
 package com.crane.apiplatformbackend.exception;
 
-import com.crane.apiplatformbackend.common.ErrorStatus;
+import com.crane.apiplatformbackend.constants.ErrorStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

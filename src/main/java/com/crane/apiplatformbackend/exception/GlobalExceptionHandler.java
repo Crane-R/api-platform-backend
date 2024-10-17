@@ -1,6 +1,6 @@
 package com.crane.apiplatformbackend.exception;
 
-import com.crane.apiplatformbackend.common.ErrorStatus;
+import com.crane.apiplatformbackend.constants.ErrorStatus;
 import com.crane.apiplatformbackend.common.GeneralResponse;
 import com.crane.apiplatformbackend.common.R;
 import lombok.extern.slf4j.Slf4j;

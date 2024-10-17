@@ -1,6 +1,7 @@
 package com.crane.apiplatformbackend.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.crane.apiplatformbackend.common.AuthAdmin;
 import com.crane.apiplatformbackend.mapper.UserMapper;
 import com.crane.apiplatformbackend.model.domain.User;
 import com.crane.apiplatformbackend.util.AkSkSignGenerate;
@@ -21,6 +22,7 @@ public class TestController {
     private UserMapper userMapper;
 
     @GetMapping("/test")
+    @AuthAdmin
     public String test() {
         return "Hello World";
     }

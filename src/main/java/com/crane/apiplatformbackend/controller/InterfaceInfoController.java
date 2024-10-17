@@ -5,6 +5,7 @@ import com.crane.apiplatformbackend.common.R;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfoVo;
 import com.crane.apiplatformbackend.model.request.InterfaceAddRequest;
 import com.crane.apiplatformbackend.service.InterfaceInfoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +20,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/interface")
 @CrossOrigin(origins = "http://localhost:8000", allowCredentials = "true")
+@RequiredArgsConstructor
 public class InterfaceInfoController {
 
-    @Autowired
-    private InterfaceInfoService interfaceInfoService;
+    private final InterfaceInfoService interfaceInfoService;
 
     /**
      * 接口新增
