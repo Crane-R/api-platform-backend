@@ -6,7 +6,7 @@ import com.crane.apiplatformbackend.model.domain.UserVo;
 import com.crane.apiplatformbackend.model.request.UserAddRequest;
 import com.crane.apiplatformbackend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "http://localhost:8000", allowCredentials = "true")
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping("/add")
     public GeneralResponse<Boolean> userRegister(@RequestBody UserAddRequest userAddRequest) {
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public GeneralResponse<Boolean> userLogin(String username, String password, HttpServletRequest request) {
+    public GeneralResponse<UserVo> userLogin(String username, String password, HttpServletRequest request) {
         return R.ok(userService.userLogin(username, password, request), "登录成功，欢迎你，" + username);
     }
 

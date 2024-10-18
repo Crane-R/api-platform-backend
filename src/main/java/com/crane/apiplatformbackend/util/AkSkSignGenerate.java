@@ -15,11 +15,11 @@ public final class AkSkSignGenerate {
     }
 
     public static String generateAk() {
-        return RandomUtil.randomString(6);
+        return RandomUtil.randomString(16);
     }
 
     public static String generateSk() {
-        return RandomUtil.randomString(6);
+        return RandomUtil.randomString(16);
     }
 
     public static String getSign(String ak, String sk, Object data) {

@@ -15,6 +15,7 @@ import com.crane.apiplatformbackend.service.UserService;
 import com.crane.apiplatformbackend.mapper.UserMapper;
 import com.crane.apiplatformbackend.util.AkSkSignGenerate;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,11 @@ import org.springframework.stereotype.Service;
  * @createDate 2024-10-05 14:56:48
  */
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     @Override
     public boolean userRegister(UserAddRequest userAddRequest) {
@@ -61,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public boolean userLogin(String username, String password, HttpServletRequest request) {
+    public UserVo userLogin(String username, String password, HttpServletRequest request) {
         QueryWrapper<User> selectUser = new QueryWrapper<>();
         selectUser.eq("username", username);
         Long l = userMapper.selectCount(selectUser);
@@ -75,7 +76,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         } else {
             //记录登录态
             request.getSession().setAttribute(UserConstants.LOGIN_STATUS, user);
-            return true;
+            return user2Vo(user);
         }
     }
 
@@ -99,6 +100,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         userVo.setUserStatus(user.getUserStatus());
         userVo.setUserRole(user.getUserRole());
         userVo.setCreateTime(user.getCreateTime());
+        userVo.setAccessKey(user.getAccessKey());
+        userVo.setSecretKey(user.getSecretKey());
         return userVo;
     }
 

@@ -27,6 +27,10 @@ public class UserVo {
 
     private Integer userRole;
 
+    private String accessKey;
+
+    private String secretKey;
+
     private Date createTime;
 
 }

@@ -1,18 +1,26 @@
 package com.crane.apiplatformbackend.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.crane.apiplatformbackend.constants.ErrorStatus;
 import com.crane.apiplatformbackend.exception.BusinessException;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfo;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfoVo;
 import com.crane.apiplatformbackend.model.request.InterfaceAddRequest;
+import com.crane.apiplatformbackend.model.request.InterfaceSelectRequest;
 import com.crane.apiplatformbackend.service.InterfaceInfoService;
 import com.crane.apiplatformbackend.mapper.InterfaceInfoMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,11 +29,11 @@ import java.util.List;
  * @createDate 2024-10-05 14:56:37
  */
 @Service
+@RequiredArgsConstructor
 public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, InterfaceInfo>
         implements InterfaceInfoService {
 
-    @Autowired
-    private InterfaceInfoMapper interfaceInfoMapper;
+    private final InterfaceInfoMapper interfaceInfoMapper;
 
     @Override
     public boolean interfaceAdd(InterfaceAddRequest interfaceAddRequest) {
@@ -60,6 +68,58 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
     public List<InterfaceInfoVo> interfaceList() {
         QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>();
         return interfaceInfoMapper.selectList(queryWrapper).stream().map(this::info2Vo).toList();
+    }
+
+    @Override
+    public List<InterfaceInfoVo> interfaceList(InterfaceSelectRequest interfaceSelectRequest) {
+        if (interfaceSelectRequest == null) {
+            return interfaceList();
+        }
+        QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>();
+        Integer status = interfaceSelectRequest.getStatus();
+        if (status != null && status >= 0) {
+            queryWrapper.eq("status", status);
+        }
+        String name = interfaceSelectRequest.getName();
+        if (StrUtil.isNotBlank(name)) {
+            queryWrapper.like("ii_description", name);
+        }
+        return interfaceInfoMapper.selectList(queryWrapper).stream().map(this::info2Vo).toList();
+    }
+
+    @Override
+    public InterfaceInfoVo interfaceSelectOne(Long interfaceId) {
+        InterfaceInfo interfaceInfo = interfaceInfoMapper.selectOne(
+                new QueryWrapper<InterfaceInfo>().eq("ii_id", interfaceId));
+        if (interfaceInfo == null) {
+            throw new BusinessException(ErrorStatus.NULL_ERROR, "查询出的接口信息为空，该id不存在");
+        }
+        return info2Vo(interfaceInfo);
+    }
+
+    @Override
+    public Page<InterfaceInfoVo> interfaceInfoPage(long pageSize, long pageNum) {
+        Page<InterfaceInfo> page = super.page(new Page<>(pageNum, pageSize));
+        Page<InterfaceInfoVo> pageVo = new Page<>();
+        BeanUtil.copyProperties(page, pageVo);
+        pageVo.setRecords(page.getRecords().stream().map(this::info2Vo).toList());
+        return pageVo;
+    }
+
+    @Override
+    public List<InterfaceInfoVo> interfaceAddBatch(long count) {
+        List<InterfaceInfo> addList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            InterfaceInfo interfaceInfo = new InterfaceInfo();
+            interfaceInfo.setIiUrl("https://www.baidu.com");
+            interfaceInfo.setIiRequestHeader("请求头");
+            interfaceInfo.setIiResponseHeader("响应头");
+            interfaceInfo.setIiMethod(RandomUtil.randomInt(0, 2));
+            interfaceInfo.setIiDescription(RandomUtil.randomString(10));
+            addList.add(interfaceInfo);
+        }
+        super.saveBatch(addList);
+        return addList.stream().map(this::info2Vo).toList();
     }
 
     private InterfaceInfo vo2Info(InterfaceInfoVo interfaceInfoVo) {

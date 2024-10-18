@@ -1,5 +1,6 @@
 package com.crane.apiplatformbackend.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crane.apiplatformbackend.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.crane.apiplatformbackend.model.domain.UserVo;
@@ -15,7 +16,7 @@ public interface UserService extends IService<User> {
 
     boolean userRegister(UserAddRequest userAddRequest);
 
-    boolean userLogin(String username, String password, HttpServletRequest request);
+    UserVo userLogin(String username, String password, HttpServletRequest request);
 
     /**
      * 获取当前登录用户的登录态
@@ -24,4 +25,5 @@ public interface UserService extends IService<User> {
      * @Date 2024/10/5 16:56
      **/
     UserVo userCurrent(HttpServletRequest request);
+
 }
