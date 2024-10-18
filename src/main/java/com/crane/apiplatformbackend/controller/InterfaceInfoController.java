@@ -8,12 +8,14 @@ import com.crane.apiplatformbackend.common.R;
 import com.crane.apiplatformbackend.constants.ErrorStatus;
 import com.crane.apiplatformbackend.constants.InterfaceInfoStatus;
 import com.crane.apiplatformbackend.exception.BusinessException;
+import com.crane.apiplatformbackend.exception.ExceptionUtil;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfoVo;
 import com.crane.apiplatformbackend.model.domain.UserVo;
 import com.crane.apiplatformbackend.model.dto.InterfaceAddRequest;
 import com.crane.apiplatformbackend.model.dto.InterfaceInvokeRequest;
 import com.crane.apiplatformbackend.model.dto.InterfaceSelectRequest;
 import com.crane.apiplatformbackend.service.InterfaceInfoService;
+import com.crane.apiplatformbackend.service.UserInterfaceInfoService;
 import com.crane.apiplatformbackend.service.UserService;
 import com.crane.apiplatformsdk.client.ApiClient;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +39,8 @@ public class InterfaceInfoController {
     private final InterfaceInfoService interfaceInfoService;
 
     private final UserService userService;
+
+    private final UserInterfaceInfoService userInterfaceInfoService;
 
     /**
      * 接口新增
@@ -107,16 +111,20 @@ public class InterfaceInfoController {
     /**
      * 在线调用接口
      *
-     *
      * @Author CraneResigned
      * @Date 2024/10/18 10:00
      **/
     @PostMapping("/invoke")
     public GeneralResponse<Object> interfaceInvoke(@RequestBody InterfaceInvokeRequest interfaceInvokeRequest, HttpServletRequest request) {
+        Long interfaceId = interfaceInvokeRequest.getInterfaceId();
+        ExceptionUtil.checkNullPointException("接口id不能为空", interfaceId);
+        if (userInterfaceInfoService.getUserInterfaceLeftNum(userService.userCurrent(request).getId(), interfaceId) < 1) {
+            throw new BusinessException(ErrorStatus.BUSINESS_ERROR, "您调用该接口的剩余次数小于1，调用失败");
+        }
         UserVo userVo = userService.userCurrent(request);
         ApiClient apiClient = new ApiClient(userVo.getAccessKey(), userVo.getSecretKey());
         String testResult = apiClient.getTestResult(userVo.getAccessKey(), userVo.getSecretKey());
-        return R.ok(testResult,"请求成功");
+        return R.ok(testResult, "请求成功");
     }
 
     @PostMapping("/page")

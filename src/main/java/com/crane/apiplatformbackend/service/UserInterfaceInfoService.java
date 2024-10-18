@@ -26,4 +26,12 @@ public interface UserInterfaceInfoService extends IService<UserInterfaceInfo> {
 
     UserInterfaceInfo vo2UserInterfaceInfo(UserInterfaceInfoVo userInterfaceInfoVo);
 
+    /**
+     * 检验该用户该接口还有多少次调用次数
+     *
+     * @Author CraneResigned
+     * @Date 2024/10/18 20:50
+     **/
+    Integer getUserInterfaceLeftNum(Long userId, Long interfaceId);
+
 }

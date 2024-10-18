@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.crane.apiplatformbackend.constants.ErrorStatus;
 import com.crane.apiplatformbackend.exception.BusinessException;
+import com.crane.apiplatformbackend.exception.ExceptionUtil;
 import com.crane.apiplatformbackend.mapper.InterfaceInfoMapper;
 import com.crane.apiplatformbackend.mapper.UserMapper;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfo;
@@ -115,6 +116,16 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         userInterfaceInfo.setCreateTime(userInterfaceInfoVo.getCreateTime());
         userInterfaceInfo.setUpdateTime(userInterfaceInfoVo.getUpdateTime());
         return userInterfaceInfo;
+    }
+
+    @Override
+    public Integer getUserInterfaceLeftNum(Long userId, Long interfaceId) {
+        QueryWrapper<UserInterfaceInfo> interfaceInfoQueryWrapper = new QueryWrapper<>();
+        interfaceInfoQueryWrapper.eq("ii_id", interfaceId);
+        interfaceInfoQueryWrapper.eq("u_id", userId);
+        UserInterfaceInfo userInterfaceInfo = userInterfaceInfoMapper.selectOne(interfaceInfoQueryWrapper);
+        ExceptionUtil.checkNullPointException("该用户没有对应的接口调用数据", userInterfaceInfo);
+        return userInterfaceInfo.getLeftNum();
     }
 }
 

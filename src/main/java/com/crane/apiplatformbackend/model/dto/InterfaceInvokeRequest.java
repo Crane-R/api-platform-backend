@@ -11,6 +11,8 @@ import lombok.Data;
 @Data
 public class InterfaceInvokeRequest {
 
+     private Long interfaceId;
+
      private String url;
 
      private String requestParams;
