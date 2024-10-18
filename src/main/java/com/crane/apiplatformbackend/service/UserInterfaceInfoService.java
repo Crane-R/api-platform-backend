@@ -4,6 +4,7 @@ import com.crane.apiplatformbackend.model.domain.UserInterfaceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.crane.apiplatformbackend.model.domain.UserInterfaceInfoVo;
 import com.crane.apiplatformbackend.model.dto.UserInterfaceAddRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -33,5 +34,13 @@ public interface UserInterfaceInfoService extends IService<UserInterfaceInfo> {
      * @Date 2024/10/18 20:50
      **/
     Integer getUserInterfaceLeftNum(Long userId, Long interfaceId);
+
+    /**
+     * 调用目标接口后剩余可调用次数要-1
+     *
+     * @Author CraneResigned
+     * @Date 2024/10/18 21:18
+     **/
+    Boolean userInterfaceInvokeNumChange(Long userId, Long interfaceId);
 
 }

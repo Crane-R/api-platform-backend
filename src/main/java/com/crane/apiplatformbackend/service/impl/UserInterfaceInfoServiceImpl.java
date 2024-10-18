@@ -1,6 +1,7 @@
 package com.crane.apiplatformbackend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.crane.apiplatformbackend.constants.ErrorStatus;
 import com.crane.apiplatformbackend.exception.BusinessException;
@@ -14,6 +15,8 @@ import com.crane.apiplatformbackend.model.domain.UserInterfaceInfoVo;
 import com.crane.apiplatformbackend.model.dto.UserInterfaceAddRequest;
 import com.crane.apiplatformbackend.service.UserInterfaceInfoService;
 import com.crane.apiplatformbackend.mapper.UserInterfaceInfoMapper;
+import com.crane.apiplatformbackend.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +38,8 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
 
     private final UserInterfaceInfoMapper userInterfaceInfoMapper;
 
+    private final UserService userService;
+
     @Override
     public UserInterfaceInfoVo userInterfaceInfoAdd(UserInterfaceAddRequest userInterfaceAddRequest) {
         Long interfaceId = userInterfaceAddRequest.getInterfaceId();
@@ -54,7 +59,6 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         userInterfaceInfo.setIiId(interfaceId);
         userInterfaceInfo.setUId(userId);
         userInterfaceInfo.setLeftNum(10);
-        userInterfaceInfo.setTotalNum(10);
         int insert = userInterfaceInfoMapper.insert(userInterfaceInfo);
         if (insert != 1) {
             throw new BusinessException(ErrorStatus.SYSTEM_ERROR, "新增失败");
@@ -124,8 +128,26 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         interfaceInfoQueryWrapper.eq("ii_id", interfaceId);
         interfaceInfoQueryWrapper.eq("u_id", userId);
         UserInterfaceInfo userInterfaceInfo = userInterfaceInfoMapper.selectOne(interfaceInfoQueryWrapper);
-        ExceptionUtil.checkNullPointException("该用户没有对应的接口调用数据", userInterfaceInfo);
+        //如果没有数据说明是第一次调用该接口，执行新增
+        if (userInterfaceInfo == null) {
+            UserInterfaceAddRequest userInterfaceAddRequest = new UserInterfaceAddRequest();
+            userInterfaceAddRequest.setInterfaceId(interfaceId);
+            userInterfaceAddRequest.setUserId(userId);
+            UserInterfaceInfoVo userInterfaceInfoVo = userInterfaceInfoAdd(userInterfaceAddRequest);
+            return userInterfaceInfoVo.getLeftNum();
+        }
         return userInterfaceInfo.getLeftNum();
+    }
+
+    @Override
+    public Boolean userInterfaceInvokeNumChange(Long userId, Long interfaceId) {
+        ExceptionUtil.checkNullPointException(userId, interfaceId);
+        UpdateWrapper<UserInterfaceInfo> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("ii_id", interfaceId);
+        updateWrapper.eq("u_id", userId);
+        updateWrapper.gt("left_num", 0);
+        updateWrapper.setSql("left_num = left_num - 1, total_num = total_num + 1");
+        return userInterfaceInfoMapper.update(updateWrapper) > 0;
     }
 }
 

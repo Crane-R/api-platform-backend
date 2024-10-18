@@ -118,13 +118,16 @@ public class InterfaceInfoController {
     public GeneralResponse<Object> interfaceInvoke(@RequestBody InterfaceInvokeRequest interfaceInvokeRequest, HttpServletRequest request) {
         Long interfaceId = interfaceInvokeRequest.getInterfaceId();
         ExceptionUtil.checkNullPointException("接口id不能为空", interfaceId);
-        if (userInterfaceInfoService.getUserInterfaceLeftNum(userService.userCurrent(request).getId(), interfaceId) < 1) {
+        Long userId = userService.userCurrent(request).getId();
+        if (userInterfaceInfoService.getUserInterfaceLeftNum(userId, interfaceId) < 1) {
             throw new BusinessException(ErrorStatus.BUSINESS_ERROR, "您调用该接口的剩余次数小于1，调用失败");
         }
         UserVo userVo = userService.userCurrent(request);
         ApiClient apiClient = new ApiClient(userVo.getAccessKey(), userVo.getSecretKey());
         String testResult = apiClient.getTestResult(userVo.getAccessKey(), userVo.getSecretKey());
-        return R.ok(testResult, "请求成功");
+        //调用完后剩余次数-1，总调用次数+1
+        Boolean b = userInterfaceInfoService.userInterfaceInvokeNumChange(userId, interfaceId);
+        return b ? R.ok(testResult, "请求成功") : R.error(ErrorStatus.SYSTEM_ERROR, "调用失败");
     }
 
     @PostMapping("/page")

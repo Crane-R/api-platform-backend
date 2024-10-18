@@ -6,6 +6,8 @@ import com.crane.apiplatformbackend.exception.ExceptionUtil;
 import com.crane.apiplatformbackend.model.domain.UserInterfaceInfoVo;
 import com.crane.apiplatformbackend.model.dto.UserInterfaceAddRequest;
 import com.crane.apiplatformbackend.service.UserInterfaceInfoService;
+import com.crane.apiplatformbackend.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,13 +29,13 @@ public class UserInterfaceInfoController {
 
     private final UserInterfaceInfoService userInterfaceInfoService;
 
+    private final UserService userService;
 
     @PostMapping("/add")
-    public GeneralResponse<UserInterfaceInfoVo> userInterfaceInfoAdd(UserInterfaceAddRequest userInterfaceAddRequest) {
-        Long interfaceId = userInterfaceAddRequest.getInterfaceId();
-        Long userId = userInterfaceAddRequest.getUserId();
-        ExceptionUtil.checkNullPointException("参数为空", interfaceId, userId);
-        return R.ok(userInterfaceInfoService.userInterfaceInfoAdd(userInterfaceAddRequest));
+    public GeneralResponse<UserInterfaceInfoVo> userInterfaceInfoAdd(Long interfaceInfoId, HttpServletRequest request) {
+        Long userId = userService.userCurrent(request).getId();
+        ExceptionUtil.checkNullPointException("参数为空", interfaceInfoId, userId);
+        return R.ok(userInterfaceInfoService.userInterfaceInfoAdd(new UserInterfaceAddRequest(interfaceInfoId, userId)));
     }
 
     @PostMapping("/delete")
