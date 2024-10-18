@@ -1,10 +1,9 @@
 package com.crane.apiplatformbackend.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crane.apiplatformbackend.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.crane.apiplatformbackend.model.domain.UserVo;
-import com.crane.apiplatformbackend.model.request.UserAddRequest;
+import com.crane.apiplatformbackend.model.dto.UserAddRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**

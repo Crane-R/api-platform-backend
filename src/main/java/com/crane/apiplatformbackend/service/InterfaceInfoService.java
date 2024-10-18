@@ -1,13 +1,11 @@
 package com.crane.apiplatformbackend.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.crane.apiplatformbackend.common.AuthAdmin;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfoVo;
-import com.crane.apiplatformbackend.model.request.InterfaceAddRequest;
-import com.crane.apiplatformbackend.model.request.InterfaceSelectRequest;
-import jakarta.servlet.http.HttpServletRequest;
+import com.crane.apiplatformbackend.model.dto.InterfaceAddRequest;
+import com.crane.apiplatformbackend.model.dto.InterfaceSelectRequest;
 
 import java.util.List;
 

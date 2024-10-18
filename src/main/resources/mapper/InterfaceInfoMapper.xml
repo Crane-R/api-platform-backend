@@ -11,14 +11,16 @@
             <result property="iiMethod" column="ii_method" jdbcType="INTEGER"/>
             <result property="iiRequestHeader" column="ii_request_header" jdbcType="VARCHAR"/>
             <result property="iiResponseHeader" column="ii_response_header" jdbcType="VARCHAR"/>
+            <result property="iiRequestParams" column="ii_request_params" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        ii_id,ii_description,ii_url,
-        ii_method,ii_request_header,ii_response_header,
+        ii_id
+        ,ii_description,ii_url,
+        ii_method,ii_request_header,ii_response_header,  ii_request_params,
         status,is_delete,create_time
     </sql>
 </mapper>

@@ -1,7 +1,6 @@
-package com.crane.apiplatformbackend.model.request;
+package com.crane.apiplatformbackend.model.dto;
 
 import lombok.Data;
-import org.springframework.http.HttpMethod;
 
 /**
  * 接口调用请求参数
@@ -14,5 +13,6 @@ public class InterfaceInvokeRequest {
 
      private String url;
 
+     private String requestParams;
 
 }

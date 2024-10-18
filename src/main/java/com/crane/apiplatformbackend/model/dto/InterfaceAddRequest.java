@@ -1,4 +1,4 @@
-package com.crane.apiplatformbackend.model.request;
+package com.crane.apiplatformbackend.model.dto;
 
 import lombok.Data;
 
@@ -20,5 +20,7 @@ public class InterfaceAddRequest {
     private String requestHeader;
 
     private String responseHeader;
+
+    private String requestParams;
 
 }

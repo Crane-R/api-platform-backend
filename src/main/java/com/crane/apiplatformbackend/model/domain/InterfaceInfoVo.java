@@ -25,6 +25,8 @@ public class InterfaceInfoVo {
 
     private String responseHeader;
 
+    private String requestParams;
+
     private Integer status;
 
     private Date createTime;

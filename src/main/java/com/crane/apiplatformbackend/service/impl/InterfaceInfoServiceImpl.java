@@ -11,13 +11,11 @@ import com.crane.apiplatformbackend.constants.ErrorStatus;
 import com.crane.apiplatformbackend.exception.BusinessException;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfo;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfoVo;
-import com.crane.apiplatformbackend.model.request.InterfaceAddRequest;
-import com.crane.apiplatformbackend.model.request.InterfaceSelectRequest;
+import com.crane.apiplatformbackend.model.dto.InterfaceAddRequest;
+import com.crane.apiplatformbackend.model.dto.InterfaceSelectRequest;
 import com.crane.apiplatformbackend.service.InterfaceInfoService;
 import com.crane.apiplatformbackend.mapper.InterfaceInfoMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -132,6 +130,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         interfaceInfo.setIiResponseHeader(interfaceInfoVo.getResponseHeader());
         interfaceInfo.setStatus(interfaceInfoVo.getStatus());
         interfaceInfo.setCreateTime(interfaceInfoVo.getCreateTime());
+        interfaceInfo.setIiRequestParams(interfaceInfoVo.getRequestParams());
         return interfaceInfo;
     }
 
@@ -145,6 +144,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         interfaceInfoVo.setResponseHeader(interfaceInfo.getIiResponseHeader());
         interfaceInfoVo.setStatus(interfaceInfo.getStatus());
         interfaceInfoVo.setCreateTime(interfaceInfo.getCreateTime());
+        interfaceInfoVo.setRequestParams(interfaceInfo.getIiRequestParams());
         return interfaceInfoVo;
     }
 

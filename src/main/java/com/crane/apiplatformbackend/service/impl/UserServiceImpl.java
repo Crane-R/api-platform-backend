@@ -10,13 +10,12 @@ import com.crane.apiplatformbackend.constants.UserConstants;
 import com.crane.apiplatformbackend.exception.BusinessException;
 import com.crane.apiplatformbackend.model.domain.User;
 import com.crane.apiplatformbackend.model.domain.UserVo;
-import com.crane.apiplatformbackend.model.request.UserAddRequest;
+import com.crane.apiplatformbackend.model.dto.UserAddRequest;
 import com.crane.apiplatformbackend.service.UserService;
 import com.crane.apiplatformbackend.mapper.UserMapper;
 import com.crane.apiplatformbackend.util.AkSkSignGenerate;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**

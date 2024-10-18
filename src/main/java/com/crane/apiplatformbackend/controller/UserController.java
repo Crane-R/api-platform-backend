@@ -3,7 +3,7 @@ package com.crane.apiplatformbackend.controller;
 import com.crane.apiplatformbackend.common.GeneralResponse;
 import com.crane.apiplatformbackend.common.R;
 import com.crane.apiplatformbackend.model.domain.UserVo;
-import com.crane.apiplatformbackend.model.request.UserAddRequest;
+import com.crane.apiplatformbackend.model.dto.UserAddRequest;
 import com.crane.apiplatformbackend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

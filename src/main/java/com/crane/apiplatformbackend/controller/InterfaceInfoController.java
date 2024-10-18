@@ -1,5 +1,6 @@
 package com.crane.apiplatformbackend.controller;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crane.apiplatformbackend.common.AuthAdmin;
 import com.crane.apiplatformbackend.common.GeneralResponse;
@@ -9,9 +10,9 @@ import com.crane.apiplatformbackend.constants.InterfaceInfoStatus;
 import com.crane.apiplatformbackend.exception.BusinessException;
 import com.crane.apiplatformbackend.model.domain.InterfaceInfoVo;
 import com.crane.apiplatformbackend.model.domain.UserVo;
-import com.crane.apiplatformbackend.model.request.InterfaceAddRequest;
-import com.crane.apiplatformbackend.model.request.InterfaceInvokeRequest;
-import com.crane.apiplatformbackend.model.request.InterfaceSelectRequest;
+import com.crane.apiplatformbackend.model.dto.InterfaceAddRequest;
+import com.crane.apiplatformbackend.model.dto.InterfaceInvokeRequest;
+import com.crane.apiplatformbackend.model.dto.InterfaceSelectRequest;
 import com.crane.apiplatformbackend.service.InterfaceInfoService;
 import com.crane.apiplatformbackend.service.UserService;
 import com.crane.apiplatformsdk.client.ApiClient;
@@ -45,6 +46,17 @@ public class InterfaceInfoController {
      **/
     @PostMapping("/add")
     public GeneralResponse<Boolean> interfaceAdd(@RequestBody InterfaceAddRequest interfaceAddRequest) {
+        String url = interfaceAddRequest.getUrl();
+        String requestHeader = interfaceAddRequest.getRequestHeader();
+        String description = interfaceAddRequest.getDescription();
+        Integer method = interfaceAddRequest.getMethod();
+        String responseHeader = interfaceAddRequest.getResponseHeader();
+        if (CharSequenceUtil.hasBlank(url, requestHeader, description, responseHeader) || method == null) {
+            throw new BusinessException(ErrorStatus.NULL_ERROR, "参数不能为空");
+        }
+        if (method < 0) {
+            throw new BusinessException(ErrorStatus.PARAM_ERROR, "method不能小于0");
+        }
         return R.ok(interfaceInfoService.interfaceAdd(interfaceAddRequest));
     }
 
@@ -55,7 +67,8 @@ public class InterfaceInfoController {
 
     @PostMapping("/update")
     public GeneralResponse<Boolean> interfaceUpdate(@RequestBody InterfaceInfoVo interfaceInfoVo) {
-        return R.ok(interfaceInfoService.interfaceUpdate(interfaceInfoVo));
+        boolean b = interfaceInfoService.interfaceUpdate(interfaceInfoVo);
+        return b ? R.ok(true) : R.error(ErrorStatus.SYSTEM_ERROR, false, "修改失败");
     }
 
     @PostMapping("/list")
@@ -94,6 +107,7 @@ public class InterfaceInfoController {
     /**
      * 在线调用接口
      *
+     *
      * @Author CraneResigned
      * @Date 2024/10/18 10:00
      **/
@@ -102,7 +116,7 @@ public class InterfaceInfoController {
         UserVo userVo = userService.userCurrent(request);
         ApiClient apiClient = new ApiClient(userVo.getAccessKey(), userVo.getSecretKey());
         String testResult = apiClient.getTestResult(userVo.getAccessKey(), userVo.getSecretKey());
-        return R.ok(testResult);
+        return R.ok(testResult,"请求成功");
     }
 
     @PostMapping("/page")
@@ -126,6 +140,17 @@ public class InterfaceInfoController {
             throw new BusinessException(ErrorStatus.PARAM_ERROR, "count不能小于0");
         }
         return R.ok(interfaceInfoService.interfaceAddBatch(count));
+    }
+
+    /**
+     * 根据id获取接口信息
+     *
+     * @Author CraneResigned
+     * @Date 2024/10/18 16:17
+     **/
+    @GetMapping("/selectOne")
+    public GeneralResponse<InterfaceInfoVo> interfaceSelectOne(Long interfaceId) {
+        return R.ok(interfaceInfoService.interfaceSelectOne(interfaceId));
     }
 
 }

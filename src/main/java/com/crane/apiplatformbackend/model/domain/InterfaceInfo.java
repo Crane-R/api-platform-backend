@@ -44,6 +44,8 @@ public class InterfaceInfo implements Serializable {
      */
     private String iiResponseHeader;
 
+    private String iiRequestParams;
+
     /**
      * 接口状态，0关闭，1开启
      */

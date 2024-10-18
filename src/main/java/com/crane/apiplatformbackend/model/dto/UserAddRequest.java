@@ -1,4 +1,4 @@
-package com.crane.apiplatformbackend.model.request;
+package com.crane.apiplatformbackend.model.dto;
 
 import lombok.Data;
 
