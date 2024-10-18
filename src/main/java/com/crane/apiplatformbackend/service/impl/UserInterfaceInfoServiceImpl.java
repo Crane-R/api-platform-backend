@@ -14,6 +14,8 @@ import com.crane.apiplatformbackend.model.domain.UserInterfaceInfoVo;
 import com.crane.apiplatformbackend.model.dto.UserInterfaceAddRequest;
 import com.crane.apiplatformbackend.service.UserInterfaceInfoService;
 import com.crane.apiplatformbackend.mapper.UserInterfaceInfoMapper;
+import com.crane.apiplatformbackend.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,8 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
     private final InterfaceInfoMapper interfaceInfoMapper;
 
     private final UserInterfaceInfoMapper userInterfaceInfoMapper;
+
+    private final UserService userService;
 
     @Override
     public UserInterfaceInfoVo userInterfaceInfoAdd(UserInterfaceAddRequest userInterfaceAddRequest) {
@@ -124,8 +128,32 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         interfaceInfoQueryWrapper.eq("ii_id", interfaceId);
         interfaceInfoQueryWrapper.eq("u_id", userId);
         UserInterfaceInfo userInterfaceInfo = userInterfaceInfoMapper.selectOne(interfaceInfoQueryWrapper);
-        ExceptionUtil.checkNullPointException("该用户没有对应的接口调用数据", userInterfaceInfo);
+        //如果没有数据说明是第一次调用该接口，执行新增
+        if (userInterfaceInfo == null) {
+            UserInterfaceAddRequest userInterfaceAddRequest = new UserInterfaceAddRequest();
+            userInterfaceAddRequest.setInterfaceId(interfaceId);
+            userInterfaceAddRequest.setUserId(userId);
+            UserInterfaceInfoVo userInterfaceInfoVo = userInterfaceInfoAdd(userInterfaceAddRequest);
+            return userInterfaceInfoVo.getLeftNum();
+        }
         return userInterfaceInfo.getLeftNum();
+    }
+
+    @Override
+    public Boolean userInterfaceInvokeSubtract(Long userId, Long interfaceId) {
+        ExceptionUtil.checkNullPointException(userId, interfaceId);
+        QueryWrapper<UserInterfaceInfo> interfaceInfoQueryWrapper = new QueryWrapper<>();
+        interfaceInfoQueryWrapper.eq("ii_id", interfaceId);
+        interfaceInfoQueryWrapper.eq("u_id", userId);
+        UserInterfaceInfo userInterfaceInfo = userInterfaceInfoMapper.selectOne(interfaceInfoQueryWrapper);
+        if (userInterfaceInfo == null) {
+            throw new BusinessException(ErrorStatus.SYSTEM_ERROR);
+        }
+        userInterfaceInfo.setLeftNum(userInterfaceInfo.getLeftNum() - 1);
+        if (userInterfaceInfo.getLeftNum() < 0) {
+            throw new BusinessException(ErrorStatus.SYSTEM_ERROR);
+        }
+        return userInterfaceInfoMapper.updateById(userInterfaceInfo) > 0;
     }
 }
 

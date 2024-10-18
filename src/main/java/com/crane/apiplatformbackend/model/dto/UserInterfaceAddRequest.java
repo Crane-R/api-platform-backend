@@ -1,6 +1,8 @@
 package com.crane.apiplatformbackend.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 用户接口添加请求体
@@ -9,10 +11,12 @@ import lombok.Data;
  * @Author Crane Resigned
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserInterfaceAddRequest {
 
-     private Long userId;
+    private Long userId;
 
-     private Long interfaceId;
+    private Long interfaceId;
 
 }
