@@ -27,12 +27,19 @@ public class TestController {
         return "Hello World";
     }
 
+    @GetMapping("/test1")
+    @AuthAdmin
+    public String test1() {
+        return "Hello World1";
+    }
+
     @GetMapping("/getSign")
     public String returnSign(String ak, String param) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("ak", ak);
-        User user = userMapper.selectOne(queryWrapper);
-        return AkSkSignGenerate.getSign(ak, user.getSecretKey(), param);
+//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("ak", ak);
+//        User user = userMapper.selectOne(queryWrapper);
+//        return AkSkSignGenerate.getSign(ak, user.getSecretKey(), param);
+        return null;
     }
 
 }

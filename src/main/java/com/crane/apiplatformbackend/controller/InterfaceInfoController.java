@@ -116,6 +116,7 @@ public class InterfaceInfoController {
      **/
     @PostMapping("/invoke")
     public GeneralResponse<Object> interfaceInvoke(@RequestBody InterfaceInvokeRequest interfaceInvokeRequest, HttpServletRequest request) {
+        //todo:这里调的是哪个接口？怎么确定？
         Long interfaceId = interfaceInvokeRequest.getInterfaceId();
         ExceptionUtil.checkNullPointException("接口id不能为空", interfaceId);
         Long userId = userService.userCurrent(request).getId();
@@ -124,10 +125,11 @@ public class InterfaceInfoController {
         }
         UserVo userVo = userService.userCurrent(request);
         ApiClient apiClient = new ApiClient(userVo.getAccessKey(), userVo.getSecretKey());
-        String testResult = apiClient.getTestResult(userVo.getAccessKey(), userVo.getSecretKey());
+//        String testResult = apiClient.getTestResult(userVo.getAccessKey(), userVo.getSecretKey());
         //调用完后剩余次数-1，总调用次数+1
+        //todo:这个减次数的逻辑要移动到网关
         Boolean b = userInterfaceInfoService.userInterfaceInvokeNumChange(userId, interfaceId);
-        return b ? R.ok(testResult, "请求成功") : R.error(ErrorStatus.SYSTEM_ERROR, "调用失败");
+        return b ? R.ok(null, "请求成功") : R.error(ErrorStatus.SYSTEM_ERROR, "调用失败");
     }
 
     @PostMapping("/page")

@@ -1,7 +1,13 @@
 package com.crane.apiplatformbackend.util;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.digest.DigestAlgorithm;
+import cn.hutool.crypto.digest.Digester;
+
+import java.util.Map;
 
 /**
  * aksksign生成
@@ -22,8 +28,19 @@ public final class AkSkSignGenerate {
         return RandomUtil.randomString(16);
     }
 
-    public static String getSign(String ak, String sk, Object data) {
-        return SecureUtil.md5(ak + sk + data);
+    /**
+     * String ak, String sk, Object data, Long timestamp, String nonce
+     *
+     * @Author CraneResigned
+     * @Date 2024/10/22 15:09
+     **/
+    public static String getSign(Map<String, Object> map, String secretKey) {
+        Digester digester = new Digester(DigestAlgorithm.SHA256);
+        String content =
+                MapUtil.sortJoin(map, StrUtil.EMPTY, StrUtil.EMPTY, false, RandomUtil.randomString(16))
+                        + StrUtil.DOT
+                        + secretKey;
+        return digester.digestHex(content);
     }
 
 }

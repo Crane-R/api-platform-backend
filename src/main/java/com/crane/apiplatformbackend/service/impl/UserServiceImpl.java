@@ -5,9 +5,9 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.crane.apiplatformbackend.constants.ErrorStatus;
+import com.crane.apiplatformsdk.constant.ErrorStatus;
 import com.crane.apiplatformbackend.constants.UserConstants;
-import com.crane.apiplatformbackend.exception.BusinessException;
+import com.crane.apiplatformsdk.exception.BusinessException;
 import com.crane.apiplatformbackend.model.domain.User;
 import com.crane.apiplatformbackend.model.domain.UserVo;
 import com.crane.apiplatformbackend.model.dto.UserAddRequest;
@@ -87,6 +87,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         User user = (User) attribute;
         return user2Vo(user);
+    }
+
+    @Override
+    public String userSecretKey(HttpServletRequest request) {
+        QueryWrapper<User> selectUser = new QueryWrapper<>();
+        selectUser.select("secret_key");
+        selectUser.eq("u_id", userCurrent(request).getId());
+        return userMapper.selectOne(selectUser).getSecretKey();
+    }
+
+    @Override
+    public String userAccessKey(HttpServletRequest request) {
+        QueryWrapper<User> selectUser = new QueryWrapper<>();
+        selectUser.select("access_key");
+        selectUser.eq("u_id", userCurrent(request).getId());
+        return userMapper.selectOne(selectUser).getSecretKey();
     }
 
     private UserVo user2Vo(User user) {

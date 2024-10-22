@@ -24,5 +24,21 @@ public interface UserService extends IService<User> {
      * @Date 2024/10/5 16:56
      **/
     UserVo userCurrent(HttpServletRequest request);
+    
+    /**
+     * 获取用户的secretKey，注意：该方法不能作为接口暴露出去，仅供服务器内部使用
+     *
+     * @Author CraneResigned
+     * @Date 2024/10/22 16:30
+     **/
+    String userSecretKey(HttpServletRequest request);
+    
+    /**
+     * 获取用户的accessKey，该方法可以作为接口，并且在sdk调用
+     *
+     * @Author CraneResigned
+     * @Date 2024/10/22 17:21
+     **/
+    String userAccessKey(HttpServletRequest request);
 
 }

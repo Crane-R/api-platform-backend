@@ -6,10 +6,12 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 业务异常
+ * 改为调用sdk中的方法
  *
  * @Author Crane Resigned
  * @Date 2024/7/17 16:19:50
  */
+@Deprecated()
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class BusinessException extends RuntimeException {
