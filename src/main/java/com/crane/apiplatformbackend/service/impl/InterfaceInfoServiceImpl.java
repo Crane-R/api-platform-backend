@@ -16,6 +16,7 @@ import com.crane.apiplatformbackend.model.dto.InterfaceSelectRequest;
 import com.crane.apiplatformbackend.service.InterfaceInfoService;
 import com.crane.apiplatformbackend.mapper.InterfaceInfoMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@DubboService
 public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, InterfaceInfo>
         implements InterfaceInfoService {
 

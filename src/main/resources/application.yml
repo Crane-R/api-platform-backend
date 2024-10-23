@@ -22,3 +22,16 @@ mybatis-plus:
 server:
   servlet:
     context-path: /api
+dubbo:
+  application:
+    name: api-platform-backend
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: -registry
+    address: nacos://localhost:8848
+nacos:
+  discovery:
+    server-addr: localhost:8848
+
