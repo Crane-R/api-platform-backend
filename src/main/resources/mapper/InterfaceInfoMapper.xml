@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.crane.apiplatformbackend.mapper.InterfaceInfoMapper">
+<mapper namespace="com.crane.apiplatformcommon.mapper.InterfaceInfoMapper">
 
-    <resultMap id="BaseResultMap" type="com.crane.apiplatformbackend.model.domain.InterfaceInfo">
+    <resultMap id="BaseResultMap" type="com.crane.apiplatformcommon.model.domain.InterfaceInfo">
             <id property="iiId" column="ii_id" jdbcType="BIGINT"/>
             <result property="iiDescription" column="ii_description" jdbcType="VARCHAR"/>
             <result property="iiUrl" column="ii_url" jdbcType="VARCHAR"/>

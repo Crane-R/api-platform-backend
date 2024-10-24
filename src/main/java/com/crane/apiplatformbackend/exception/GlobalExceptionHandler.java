@@ -1,8 +1,9 @@
 package com.crane.apiplatformbackend.exception;
 
-import com.crane.apiplatformbackend.constants.ErrorStatus;
 import com.crane.apiplatformbackend.common.GeneralResponse;
 import com.crane.apiplatformbackend.common.R;
+import com.crane.apiplatformcommon.constant.ErrorStatus;
+import com.crane.apiplatformcommon.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

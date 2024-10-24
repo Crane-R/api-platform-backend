@@ -1,7 +1,7 @@
 package com.crane.apiplatformbackend.common;
 
-import com.crane.apiplatformbackend.constants.ErrorStatus;
 import com.crane.apiplatformbackend.constants.SuccessStatus;
+import com.crane.apiplatformcommon.constant.ErrorStatus;
 import lombok.Data;
 
 /**

@@ -2,11 +2,11 @@ package com.crane.apiplatformbackend.controller;
 
 import com.crane.apiplatformbackend.common.GeneralResponse;
 import com.crane.apiplatformbackend.common.R;
-import com.crane.apiplatformbackend.exception.ExceptionUtil;
-import com.crane.apiplatformbackend.model.domain.UserInterfaceInfoVo;
-import com.crane.apiplatformbackend.model.dto.UserInterfaceAddRequest;
-import com.crane.apiplatformbackend.service.UserInterfaceInfoService;
-import com.crane.apiplatformbackend.service.UserService;
+import com.crane.apiplatformcommon.exception.ExceptionUtil;
+import com.crane.apiplatformcommon.model.dto.UserInterfaceAddRequest;
+import com.crane.apiplatformcommon.model.vo.UserInterfaceInfoVo;
+import com.crane.apiplatformcommon.service.UserInterfaceInfoService;
+import com.crane.apiplatformcommon.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

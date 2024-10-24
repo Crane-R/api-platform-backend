@@ -1,10 +1,8 @@
 package com.crane.apiplatformbackend.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.crane.apiplatformbackend.common.AuthAdmin;
-import com.crane.apiplatformbackend.mapper.UserMapper;
-import com.crane.apiplatformbackend.model.domain.User;
-import com.crane.apiplatformbackend.util.AkSkSignGenerate;
+import com.crane.apiplatformcommon.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @Author Crane Resigned
  */
 @RestController
+@RequiredArgsConstructor
 public class TestController {
 
-    @Autowired
-    private UserMapper userMapper;
+//    private final UserMapper userMapper;
 
     @GetMapping("/test")
     @AuthAdmin

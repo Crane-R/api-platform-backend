@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.crane.apiplatformbackend.mapper.UserMapper">
+<mapper namespace="com.crane.apiplatformcommon.mapper.UserMapper">
 
-    <resultMap id="BaseResultMap" type="com.crane.apiplatformbackend.model.domain.User">
+    <resultMap id="BaseResultMap" type="com.crane.apiplatformcommon.model.domain.User">
             <id property="uId" column="u_id" jdbcType="BIGINT"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="nickname" column="nickname" jdbcType="VARCHAR"/>

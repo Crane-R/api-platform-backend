@@ -34,3 +34,20 @@ create table `api-platform`.user
 )
     comment '用户表';
 
+create table `api-platform`.user_interface_info
+(
+    uii_id      bigint auto_increment comment '流水id'
+        primary key,
+    u_id        bigint                             not null comment '用户id',
+    ii_id       bigint                             not null comment '接口信息id',
+    total_num   int      default 0                 not null comment '总调用次数',
+    left_num    int      default 0                 not null comment '剩余调用次数',
+    status      int      default 0                 not null comment '状态，0正常，1禁用',
+    create_time datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    update_time datetime default CURRENT_TIMESTAMP not null comment '修改时间',
+    is_delete   int      default 0                 not null,
+    constraint user_interface_info_u_id_ii_id_uindex
+        unique (u_id, ii_id) comment '用户id和接口id构成唯一索引'
+)
+    comment '用户接口关系表';
+
