@@ -130,6 +130,14 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         return interfaceInfoMapper.selectCount(queryWrapper) > 0;
     }
 
+    @Override
+    public InterfaceInfoVo interfaceSelectOne(String url, Integer method) {
+        QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("ii_url", url);
+        queryWrapper.eq("ii_method", method);
+        return info2Vo(interfaceInfoMapper.selectOne(queryWrapper));
+    }
+
     private InterfaceInfo vo2Info(InterfaceInfoVo interfaceInfoVo) {
         InterfaceInfo interfaceInfo = new InterfaceInfo();
         interfaceInfo.setIiId(interfaceInfoVo.getId());

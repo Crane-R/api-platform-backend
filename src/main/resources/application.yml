@@ -24,6 +24,7 @@ mybatis-plus:
 server:
   servlet:
     context-path: /api
+  port: 8080
 dubbo:
   application:
     name: api-platform-backend

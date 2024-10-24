@@ -18,6 +18,7 @@ import com.crane.apiplatformcommon.model.vo.UserVo;
 import com.crane.apiplatformcommon.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -29,6 +30,7 @@ import java.util.Map;
  */
 @Service
 @RequiredArgsConstructor
+@DubboService
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
 
@@ -114,6 +116,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         Map<String, Object> signMap = BeanUtil.beanToMap(signDto);
         String secretKey = userSecretKey(signDto.getAccessKey());
         return AkSkSignGenerate.getSign(signMap, secretKey);
+    }
+
+    @Override
+    public UserVo getUserByAccessKey(String accessKey) {
+        QueryWrapper<User> selectUser = new QueryWrapper<>();
+        selectUser.eq("access_key", accessKey);
+        return user2Vo(userMapper.selectOne(selectUser));
     }
 
     private UserVo user2Vo(User user) {

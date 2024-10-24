@@ -17,6 +17,7 @@ import com.crane.apiplatformcommon.model.vo.UserInterfaceInfoVo;
 import com.crane.apiplatformcommon.service.UserInterfaceInfoService;
 import com.crane.apiplatformcommon.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@DubboService
 public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoMapper, UserInterfaceInfo>
         implements UserInterfaceInfoService {
 
