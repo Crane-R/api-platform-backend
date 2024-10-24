@@ -1,22 +1,26 @@
 package com.crane.apiplatformbackend.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.crane.apiplatformbackend.constants.UserConstants;
+import com.crane.apiplatformbackend.util.AkSkSignGenerate;
 import com.crane.apiplatformcommon.constant.ErrorStatus;
 import com.crane.apiplatformcommon.exception.BusinessException;
 import com.crane.apiplatformcommon.mapper.UserMapper;
 import com.crane.apiplatformcommon.model.domain.User;
+import com.crane.apiplatformcommon.model.dto.SignDto;
 import com.crane.apiplatformcommon.model.dto.UserAddRequest;
 import com.crane.apiplatformcommon.model.vo.UserVo;
 import com.crane.apiplatformcommon.service.UserService;
-import com.crane.apiplatformbackend.constants.UserConstants;
-import com.crane.apiplatformbackend.util.AkSkSignGenerate;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @author Crane Resigned
@@ -90,10 +94,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public String userSecretKey(HttpServletRequest request) {
+    public String userSecretKey(String accessKey) {
         QueryWrapper<User> selectUser = new QueryWrapper<>();
         selectUser.select("secret_key");
-        selectUser.eq("u_id", userCurrent(request).getId());
+        selectUser.eq("access_key", accessKey);
         return userMapper.selectOne(selectUser).getSecretKey();
     }
 
@@ -103,6 +107,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         selectUser.select("access_key");
         selectUser.eq("u_id", userCurrent(request).getId());
         return userMapper.selectOne(selectUser).getSecretKey();
+    }
+
+    @Override
+    public String getSign(SignDto signDto) {
+        Map<String, Object> signMap = BeanUtil.beanToMap(signDto);
+        String secretKey = userSecretKey(signDto.getAccessKey());
+        return AkSkSignGenerate.getSign(signMap, secretKey);
     }
 
     private UserVo user2Vo(User user) {

@@ -166,4 +166,13 @@ public class InterfaceInfoController {
         return R.ok(interfaceInfoService.interfaceSelectOne(interfaceId));
     }
 
+    @PostMapping("/interfaceIsExistByInt")
+    public GeneralResponse<Boolean> interfaceIsExist(String url, Integer method) {
+        if (!(method == 0 || method == 1)) {
+            throw new BusinessException(ErrorStatus.BUSINESS_ERROR, "不支持的方法");
+        }
+        Boolean b = interfaceInfoService.interfaceIsExist(url, method);
+        return b ? R.ok(true) : R.error(ErrorStatus.BUSINESS_ERROR, "无此接口");
+    }
+
 }

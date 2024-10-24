@@ -111,7 +111,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         List<InterfaceInfo> addList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             InterfaceInfo interfaceInfo = new InterfaceInfo();
-            interfaceInfo.setIiUrl("https://www.baidu.com");
+            interfaceInfo.setIiUrl("https://www.baidu.com" + RandomUtil.randomString(6));
             interfaceInfo.setIiRequestHeader("请求头");
             interfaceInfo.setIiResponseHeader("响应头");
             interfaceInfo.setIiMethod(RandomUtil.randomInt(0, 2));
@@ -120,6 +120,14 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         }
         super.saveBatch(addList);
         return addList.stream().map(this::info2Vo).toList();
+    }
+
+    @Override
+    public Boolean interfaceIsExist(String url, Integer method) {
+        QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("ii_url", url);
+        queryWrapper.eq("ii_method", method);
+        return interfaceInfoMapper.selectCount(queryWrapper) > 0;
     }
 
     private InterfaceInfo vo2Info(InterfaceInfoVo interfaceInfoVo) {

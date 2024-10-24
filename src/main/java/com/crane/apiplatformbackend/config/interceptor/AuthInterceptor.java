@@ -47,6 +47,9 @@ public class AuthInterceptor implements HandlerInterceptor {
      **/
     private void checkAdmin(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute(UserConstants.LOGIN_STATUS);
+        if (user == null) {
+            throw new BusinessException(ErrorStatus.NO_LOGIN);
+        }
         if (!Objects.equals(user.getUserRole(), UserRole.ADMIN.getUserRoleId())) {
             throw new BusinessException(ErrorStatus.NO_AUTHORITY, "您没有权限进行该操作");
         }

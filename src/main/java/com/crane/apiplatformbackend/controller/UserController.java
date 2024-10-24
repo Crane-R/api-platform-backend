@@ -50,10 +50,8 @@ public class UserController {
      * @Date 2024/10/22 15:02
      **/
     @PostMapping("/getSign")
-    public GeneralResponse<String> getSign(@RequestBody SignDto signDto, HttpServletRequest request) {
-        Map<String, Object> signMap = BeanUtil.beanToMap(signDto);
-        String sk = userService.userSecretKey(request);
-        return R.ok(AkSkSignGenerate.getSign(signMap, sk));
+    public GeneralResponse<String> getSign(@RequestBody SignDto signDto) {
+        return R.ok(userService.getSign(signDto));
     }
 
     @GetMapping("/userAk")
