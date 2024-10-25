@@ -7,9 +7,10 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.crane.apiplatformbackend.mapper.InterfaceInfoMapper;
 import com.crane.apiplatformcommon.constant.ErrorStatus;
+import com.crane.apiplatformcommon.constant.InterfaceInfoStatus;
 import com.crane.apiplatformcommon.exception.BusinessException;
-import com.crane.apiplatformcommon.mapper.InterfaceInfoMapper;
 import com.crane.apiplatformcommon.model.domain.InterfaceInfo;
 import com.crane.apiplatformcommon.model.dto.InterfaceAddRequest;
 import com.crane.apiplatformcommon.model.dto.InterfaceSelectRequest;
@@ -135,10 +136,25 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("ii_url", url);
         queryWrapper.eq("ii_method", method);
-        return info2Vo(interfaceInfoMapper.selectOne(queryWrapper));
+        InterfaceInfo interfaceInfo = interfaceInfoMapper.selectOne(queryWrapper);
+        if (interfaceInfo == null) {
+            throw new BusinessException(ErrorStatus.NULL_ERROR, "找不到接口");
+        }
+        return info2Vo(interfaceInfo);
     }
 
-    private InterfaceInfo vo2Info(InterfaceInfoVo interfaceInfoVo) {
+    @Override
+    public InterfaceInfoStatus getStatus(Long interfaceId) {
+        InterfaceInfoVo interfaceInfoVo = interfaceSelectOne(interfaceId);
+        return switch (interfaceInfoVo.getStatus()) {
+            case 0 -> InterfaceInfoStatus.OFFLINE;
+            case 1 -> InterfaceInfoStatus.ONLINE;
+            default -> null;
+        };
+    }
+
+    @Override
+    public InterfaceInfo vo2Info(InterfaceInfoVo interfaceInfoVo) {
         InterfaceInfo interfaceInfo = new InterfaceInfo();
         interfaceInfo.setIiId(interfaceInfoVo.getId());
         interfaceInfo.setIiDescription(interfaceInfoVo.getDescription());
@@ -152,7 +168,8 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         return interfaceInfo;
     }
 
-    private InterfaceInfoVo info2Vo(InterfaceInfo interfaceInfo) {
+    @Override
+    public InterfaceInfoVo info2Vo(InterfaceInfo interfaceInfo) {
         InterfaceInfoVo interfaceInfoVo = new InterfaceInfoVo();
         interfaceInfoVo.setId(interfaceInfo.getIiId());
         interfaceInfoVo.setDescription(interfaceInfo.getIiDescription());

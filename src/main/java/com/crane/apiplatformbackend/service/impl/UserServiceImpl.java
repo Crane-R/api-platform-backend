@@ -7,10 +7,10 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.crane.apiplatformbackend.constants.UserConstants;
+import com.crane.apiplatformbackend.mapper.UserMapper;
 import com.crane.apiplatformbackend.util.AkSkSignGenerate;
 import com.crane.apiplatformcommon.constant.ErrorStatus;
 import com.crane.apiplatformcommon.exception.BusinessException;
-import com.crane.apiplatformcommon.mapper.UserMapper;
 import com.crane.apiplatformcommon.model.domain.User;
 import com.crane.apiplatformcommon.model.dto.SignDto;
 import com.crane.apiplatformcommon.model.dto.UserAddRequest;
@@ -123,6 +123,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         QueryWrapper<User> selectUser = new QueryWrapper<>();
         selectUser.eq("access_key", accessKey);
         return user2Vo(userMapper.selectOne(selectUser));
+    }
+
+    @Override
+    public Boolean logout(HttpServletRequest request) {
+        request.getSession().removeAttribute(UserConstants.LOGIN_STATUS);
+        return true;
     }
 
     private UserVo user2Vo(User user) {

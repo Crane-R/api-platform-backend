@@ -1,18 +1,21 @@
 package com.crane.apiplatformbackend.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.crane.apiplatformbackend.common.AuthAdmin;
 import com.crane.apiplatformbackend.common.GeneralResponse;
 import com.crane.apiplatformbackend.common.R;
-import com.crane.apiplatformbackend.constants.InterfaceInfoStatus;
 import com.crane.apiplatformcommon.constant.ErrorStatus;
+import com.crane.apiplatformcommon.constant.InterfaceConstant;
+import com.crane.apiplatformcommon.constant.InterfaceInfoStatus;
 import com.crane.apiplatformcommon.exception.BusinessException;
 import com.crane.apiplatformcommon.exception.ExceptionUtil;
 import com.crane.apiplatformcommon.model.dto.InterfaceAddRequest;
 import com.crane.apiplatformcommon.model.dto.InterfaceInvokeRequest;
 import com.crane.apiplatformcommon.model.dto.InterfaceSelectRequest;
 import com.crane.apiplatformcommon.model.vo.InterfaceInfoVo;
+import com.crane.apiplatformcommon.model.vo.InvokeResponse;
 import com.crane.apiplatformcommon.model.vo.UserVo;
 import com.crane.apiplatformcommon.service.InterfaceInfoService;
 import com.crane.apiplatformcommon.service.UserInterfaceInfoService;
@@ -26,13 +29,14 @@ import java.util.List;
 
 /**
  * 接口信息接口
+ * 网关已经配置跨域，这里不需要了
  *
  * @Date 2024/10/5 15:04
  * @Author Crane Resigned
  */
 @RestController
 @RequestMapping("/interface")
-@CrossOrigin(origins = "http://localhost:8000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:8000", allowCredentials = "true")
 @RequiredArgsConstructor
 public class InterfaceInfoController {
 
@@ -88,13 +92,20 @@ public class InterfaceInfoController {
      **/
     @PostMapping("/online")
     @AuthAdmin
-    public GeneralResponse<Boolean> interfaceOnLine(Long interfaceId) {
+    public GeneralResponse<Boolean> interfaceOnLine(Long interfaceId, HttpServletRequest request) {
         InterfaceInfoVo interfaceInfoVo = interfaceInfoService.interfaceSelectOne(interfaceId);
         if (interfaceInfoVo == null) {
             throw new BusinessException(ErrorStatus.NULL_ERROR, "该接口不存在");
         }
+        //要先调用一次接口才给发布
+        InterfaceInvokeRequest interfaceInvokeRequest = new InterfaceInvokeRequest();
+        interfaceInvokeRequest.setInterfaceId(interfaceId);
+        interfaceInvokeRequest.setUrl(interfaceInfoVo.getUrl());
+        interfaceInvokeRequest.setRequestParams(InterfaceConstant.ALLOW_ONLINE);
+        InvokeResponse data = interfaceInvoke(interfaceInvokeRequest, request).getData();
         interfaceInfoVo.setStatus(InterfaceInfoStatus.ONLINE.getStatus());
-        return R.ok(interfaceInfoService.interfaceUpdate(interfaceInfoVo), "接口上线成功");
+        return R.ok(interfaceInfoService.interfaceUpdate(interfaceInfoVo),
+                "接口上线成功" + data.getResult() + "剩余次数：" + data.getRemainInvokeCount());
     }
 
     @PostMapping("/offline")
@@ -115,21 +126,28 @@ public class InterfaceInfoController {
      * @Date 2024/10/18 10:00
      **/
     @PostMapping("/invoke")
-    public GeneralResponse<Object> interfaceInvoke(@RequestBody InterfaceInvokeRequest interfaceInvokeRequest, HttpServletRequest request) {
-        //todo:这里调的是哪个接口？怎么确定？
+    public GeneralResponse<InvokeResponse> interfaceInvoke(@RequestBody InterfaceInvokeRequest interfaceInvokeRequest,
+                                                           HttpServletRequest request) {
         Long interfaceId = interfaceInvokeRequest.getInterfaceId();
         ExceptionUtil.checkNullPointException("接口id不能为空", interfaceId);
+
+        //校验接口状态是否启动
+        if (!StrUtil.equals(interfaceInvokeRequest.getRequestParams(), InterfaceConstant.ALLOW_ONLINE)
+                && interfaceInfoService.getStatus(interfaceId) != InterfaceInfoStatus.ONLINE) {
+            throw new BusinessException(ErrorStatus.BUSINESS_ERROR, "请先联系管理员上线接口");
+        }
+
         Long userId = userService.userCurrent(request).getId();
         if (userInterfaceInfoService.getUserInterfaceLeftNum(userId, interfaceId) < 1) {
             throw new BusinessException(ErrorStatus.BUSINESS_ERROR, "您调用该接口的剩余次数小于1，调用失败");
         }
+        //调用接口
         UserVo userVo = userService.userCurrent(request);
+        InterfaceInfoVo interfaceInfoVo = interfaceInfoService.interfaceSelectOne(interfaceId);
         ApiClient apiClient = new ApiClient(userVo.getAccessKey(), userVo.getSecretKey());
-//        String testResult = apiClient.getTestResult(userVo.getAccessKey(), userVo.getSecretKey());
-        //调用完后剩余次数-1，总调用次数+1
-        //todo:这个减次数的逻辑要移动到网关
-        Boolean b = userInterfaceInfoService.userInterfaceInvokeNumChange(userId, interfaceId);
-        return b ? R.ok(null, "请求成功") : R.error(ErrorStatus.SYSTEM_ERROR, "调用失败");
+//        HttpResponse invoke = apiClient.invoke(interfaceInfoVo.getUrl(), interfaceInfoVo.getMethod(), interfaceInvokeRequest.getRequestParams());
+        String res = apiClient.getApiNameController(interfaceInfoVo.getUrl(), interfaceInvokeRequest.getRequestParams());
+        return R.ok(new InvokeResponse(res, userInterfaceInfoService.getUserInterfaceLeftNum(userId, interfaceId)), "调用成功");
     }
 
     @PostMapping("/page")

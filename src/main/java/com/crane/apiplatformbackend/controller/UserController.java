@@ -21,7 +21,7 @@ import java.util.Map;
  * @Author Crane Resigned
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:8000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:8000", allowCredentials = "true")
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
@@ -51,12 +51,17 @@ public class UserController {
      **/
     @PostMapping("/getSign")
     public GeneralResponse<String> getSign(@RequestBody SignDto signDto) {
-        return R.ok(userService.getSign(signDto));
+        return R.ok(userService.getSign(signDto), "获取签名成功");
     }
 
     @GetMapping("/userAk")
     public GeneralResponse<String> userAccessKey(HttpServletRequest request) {
         return R.ok(userService.userAccessKey(request));
+    }
+
+    @PostMapping("/logout")
+    public GeneralResponse<Boolean> logout(HttpServletRequest request) {
+        return R.ok(userService.logout(request));
     }
 
 }

@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Crane Resigned
  */
 @SpringBootApplication
-@MapperScan("com.crane.apiplatformcommon.mapper")
+@MapperScan("com.crane.apiplatformbackend.mapper")
 @Slf4j
 @EnableDubbo
 public class APBApplication {
