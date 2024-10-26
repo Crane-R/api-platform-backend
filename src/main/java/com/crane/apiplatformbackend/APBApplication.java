@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableDubbo
 public class APBApplication {
 
+
     public static void main(String[] args) {
         SpringApplication.run(APBApplication.class, args);
         log.info("knife4j的接口文档地址为：http://localhost:8080/api/doc.html");
